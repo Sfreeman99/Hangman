@@ -1,3 +1,6 @@
+import core, random
+
+
 def underline(phrase):
     ''' str -> Nonetype
 
@@ -10,5 +13,7 @@ def underline(phrase):
 
 
 print('Welcome to Hangman')
-phrases = ['Hello']
+phrases = ['Hello', 'Good', 'Shedlia']
+current_phrase = random.choice(phrases)
 print(current_phrase)
+print(underline(current_phrase))
