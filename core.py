@@ -1,12 +1,12 @@
 def underline(phrase):
-    ''' str -> Nonetype
+    ''' str -> list
 
     Takes in a string and changes it into '__'
 
     >>> underline('Hello')
-    '__ __ __ __ __'
+    ['__', '__', '__', '__', '__']
     >>> underline('Hello World')
-    '__ __ __ __ __   __ __ __ __ __'
+    ['__', '__', '__', '__', '__', ' ', '__', '__', '__', '__', '__']
     '''
     result = []
     for i in phrase:
@@ -14,4 +14,20 @@ def underline(phrase):
             result.append(' ')
         else:
             result.append('__')
-    return ' '.join(result)
+    return result
+
+
+def list_iteration(phrase):
+    ''' str -> list
+
+    takes in a phrase and splits it up in a list
+
+    >>> list_iteration('Hello')
+    ['H', 'e', 'l', 'l', 'o']
+    >>> list_iteration('Hello World')
+    ['H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd']
+    '''
+    result = []
+    for letters in phrase:
+        result.append(letters)
+    return result
