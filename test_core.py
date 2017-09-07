@@ -6,3 +6,9 @@ def test_underline_with_one_word():
     assert core.underline(phrase) == '__ __ __ __ __'
     assert core.underline('Goodbye') == '__ __ __ __ __ __ __'
     assert core.underline('a') != '__ '
+
+
+def test_underline_with_a_phrase():
+    phrase = 'This is a phrase'
+    assert core.underline(
+        phrase) == '__ __ __ __   __ __   __   __ __ __ __ __ __'

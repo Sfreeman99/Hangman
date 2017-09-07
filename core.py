@@ -5,5 +5,13 @@ def underline(phrase):
 
     >>> underline('Hello')
     '__ __ __ __ __'
+    >>> underline('Hello World')
+    '__ __ __ __ __   __ __ __ __ __'
     '''
-    return ('__ ' * len(phrase)).strip()
+    result = []
+    for i in phrase:
+        if i == ' ':
+            result.append(' ')
+        else:
+            result.append('__')
+    return ' '.join(result)
