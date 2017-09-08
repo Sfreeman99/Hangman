@@ -44,3 +44,21 @@ def phrases(disk):
         i = item.strip().split(' | ')
         phrase[i[0]].append(i[1])
     return phrase
+
+
+class Hangman:
+    def __init__(self, answer, guesses_left, guessed_letters):
+        self.answer = answer
+        self.guesses_left = guesses_left
+        self.guessed_letters = guessed_letters
+
+    def guess_letter(self, letter):
+        self.guessed_letters.add(letter)
+        if letter not in self.answer:
+            self.guesses_left -= 1
+
+    def guess_view(self):
+        return [
+            l if l in self.guessed_letters or l == ' ' else None
+            for l in self.answer
+        ]
