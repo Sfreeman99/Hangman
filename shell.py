@@ -1,25 +1,39 @@
-import core, random, getpass
+import core, random, getpass, disk
 
 
 def options():
-    options = input('Would you like to make a phrase?\n[Y/N]').upper()
-    if options == 'Y':
-        phrase = [getpass.getpass('Create Phrase: ')]
-        return phrase
-    elif options == 'N':
-        phrases = [
-            'This is easy', 'Another random phrase',
-            'Peter Piper Picked a peck of Pickled Peppers',
-            'Beating a Dead Horse'
-        ]
-        return phrases
+    while True:
+        options = input('Would you like to make a phrase?\n[Y/N]\n: ').upper()
+        if options == 'Y':
+            phrase = getpass.getpass('Create Phrase: ')
+            return phrase
+        elif options == 'N':
+            phrases = disk.read()
+            phrases = core.phrases(phrases)
+            difficult = difficulty(phrases)
+            return difficult
+        else:
+            print('Invalid Choice... Please Try again')
+
+
+def difficulty(phrase):
+    while True:
+        level = input('Difficulty: \n\t-Easy\n\t-Medium\n\t-Hard\n: ').lower()
+        if level == 'easy':
+            return random.choice(phrase['Easy'])
+        elif level == 'medium':
+            return random.choice(phrase['Medium'])
+        elif level == 'hard':
+            return random.choice(phrase['Hard'])
+        else:
+            print('Invalid Choice... Please Try again')
 
 
 def main():
     print('Welcome to Hangman')
     phrase = options()
     print('Selecting a phrase')
-    chosen_phrase = random.choice(phrase)
+    chosen_phrase = phrase
     correct_answer = core.list_iteration(chosen_phrase)
     underlined_phrase = core.underline(chosen_phrase)
     print(' '.join(underlined_phrase))
@@ -35,10 +49,12 @@ def main():
         print('You selected {}'.format(decision))
         guesses.add(decision)
 
-        if decision in correct_answer:
-            change = [(indx, value)
-                      for indx, value in enumerate(correct_answer)
-                      if decision.lower() == value.lower()]
+        if (decision.lower() in correct_answer) or (
+                decision.upper() in correct_answer):
+            change = [
+                (indx, value) for indx, value in enumerate(correct_answer)
+                if (decision.upper() == value) or (decision.lower() == value)
+            ]
             # change = []
             # for indx, value in enumerate(correct_answer):
             #     if decision.lower() == value.lower():
@@ -50,15 +66,15 @@ def main():
             if correct_answer == underlined_phrase:
                 break
             print(' '.join(underlined_phrase))
-
         else:
             print('Wrong')
             limit -= 1
+
     if limit == 0:
         print('Gameover You lose')
+        print('Answer: \n{}'.format(chosen_phrase))
 
     else:
-        print(' '.join(underlined_phrase))
         print('You win!!!')
 
 

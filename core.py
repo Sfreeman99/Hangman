@@ -31,3 +31,16 @@ def list_iteration(phrase):
     for letters in phrase:
         result.append(letters)
     return result
+
+
+def phrases(disk):
+    ''' None -> Dict
+
+    returns a list of phrases
+
+    '''
+    phrase = {'Easy': [], 'Medium': [], 'Hard': []}
+    for item in disk:
+        i = item.strip().split(' | ')
+        phrase[i[0]].append(i[1])
+    return phrase
