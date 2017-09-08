@@ -1,10 +1,10 @@
-import core, random
+import core, random, getpass
 
 
 def options():
     options = input('Would you like to make a phrase?\n[Y/N]').upper()
     if options == 'Y':
-        phrase = [input('Create Phrase: ')]
+        phrase = [getpass.getpass('Create Phrase: ')]
         return phrase
     elif options == 'N':
         phrases = [
