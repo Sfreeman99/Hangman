@@ -69,6 +69,7 @@ def main():
         else:
             print('Wrong')
             limit -= 1
+            print(' '.join(underlined_phrase))
 
     if limit == 0:
         print('Gameover You lose')
