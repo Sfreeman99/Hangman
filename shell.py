@@ -1,6 +1,20 @@
 import core, random, getpass, disk
 
 
+def main():
+    decision = input(
+        'What would you like to play? \n\t-Hangman\n\t-Wheel of Fortune\n: '
+    ).upper()
+    if decision == 'HANGMAN':
+        print(hangman_main())
+    else:
+        print(wheel_main())
+
+
+def wheel_main():
+    return 'In Progress... Please try again later'
+
+
 def options():
     while True:
         options = input('Would you like to make a phrase?\n[Y/N]\n: ').upper()
@@ -29,7 +43,7 @@ def difficulty(phrase):
             print('Invalid Choice... Please Try again')
 
 
-def main():
+def hangman_main():
     print('Welcome to Hangman')
     phrase = options()
     print('Selecting a phrase')
@@ -38,14 +52,24 @@ def main():
     while True:
         current_guess = input('Guess: ')
         print(game.guess(current_guess))
-        boolean, message = game.gameover()
-
-        if boolean != True:
-            continue
-        elif boolean == True:
+        boolean, message = game.gameover(phrase)
+        if boolean == True:
             break
+        decision = input('\nwould you like to solve? \n[Y/N}\n:').upper()
+        if decision == 'Y':
+            solve = input('What is it: ')
+            boolean, message = game.solve_puzzle(solve)
+            if boolean == True:
+                break
+            print(message)
+            continue
+        elif decision == 'N':
+            continue
 
-    print(message)
+    if boolean == True:
+        return message
+    elif solve_phrase == True:
+        return message
 
 
 if __name__ == '__main__':

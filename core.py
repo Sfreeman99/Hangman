@@ -1,3 +1,6 @@
+import random
+
+
 def underline(phrase):
     ''' str -> list
 
@@ -76,16 +79,71 @@ class Hangman:
                 self.tries, ' '.join(self.underlined_phrase))
             return message
 
-    def gameover(self):
+    def solve_puzzle(self, phrase):
+        if phrase.upper() == ''.join(self.answer).upper():
+            message = 'That is it... You win!!!'
+            boolean = True
+            return boolean, message
+        self.tries -= 1
+        boolean = False
+        message = 'That is wrong.. Nice Try Though\n {} guesses left'.format(
+            self.tries)
+        return boolean, message
+
+    def gameover(self, phrase):
         if self.tries == 0:
             boolean = True
             message = 'Game Over ... You lose'
             return boolean, message
-        if self.underlined_phrase == self.answer:
+        elif self.underlined_phrase == self.answer:
             boolean = True
             message = 'Game Over... You Win'
             return boolean, message
+
         else:
             boolean = False
             message = None
             return boolean, message
+
+
+class WheelofForturne(Hangman):
+    def __init__(self, name, score, answer, wins):
+        super().__init__(answer)
+        self.score = 0
+        self.name = name
+        self.answer = answer
+        self.guesses = set()
+
+    def spin(self):
+        choices = [1500, 500, 'Lose a Turn', 'Bankrupt', 200, 250, 10000]
+        choice = random.choice(choices)
+        return choice
+
+    def guess(self, spin_choice, current_guess):
+        if spin_choice == 'Lose a Turn':
+            return None
+        elif spin_choice == 'Bankrupt':
+            self.score = 0
+        elif current_guess in self.guesses:
+            message = 'You already guessed that'
+        elif (current_guess.lower() in self.answer) or (
+                current_guess.upper() in self.answer):
+            self.guesses.add(current_guess)
+            change = [(indx, value) for indx, value in enumerate(self.answer)
+                      if (current_guess.upper() == value) or (
+                          current_guess.lower() == value)]
+            for index, l in change:
+                self.underlined_phrase.insert(index, l)
+                self.underlined_phrase.pop(index + 1)
+            message = 'There are {} {}(\'s)\n Money: {}\n {}'.format(
+                self.answer.count(l.upper()) + self.answer.count(l.lower()),
+                current_guess, self.score, ' '.join(self.underlined_phrase))
+            return message
+        else:
+            message = '{} is not in the phrase'.format(current_guess)
+            return message
+
+    def solve_puzzle(self, phrase):
+        if phrase.upper() == ' '.join(self.answer).upper():
+            return True
+        return False
