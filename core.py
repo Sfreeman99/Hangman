@@ -47,18 +47,45 @@ def phrases(disk):
 
 
 class Hangman:
-    def __init__(self, answer, guesses_left, guessed_letters):
-        self.answer = answer
-        self.guesses_left = guesses_left
-        self.guessed_letters = guessed_letters
+    def __init__(self, answer):
+        self.answer = list_iteration(answer)
+        self.guesses = set()
+        self.tries = 5
+        self.underlined_phrase = underline(self.answer)
 
-    def guess_letter(self, letter):
-        self.guessed_letters.add(letter)
-        if letter not in self.answer:
-            self.guesses_left -= 1
+    def guess(self, current_guess):
+        if current_guess in self.guesses:
+            return 'You already guessed that'
+        elif (current_guess.lower() in self.answer) or (
+                current_guess.upper() in self.answer):
+            self.guesses.add(current_guess)
+            change = [(indx, value) for indx, value in enumerate(self.answer)
+                      if (current_guess.upper() == value) or (
+                          current_guess.lower() == value)]
+            for index, l in change:
+                self.underlined_phrase.insert(index, l)
+                self.underlined_phrase.pop(index + 1)
+            message = 'There are {} {}(\'s)\n {}'.format(
+                self.answer.count(l.upper()) + self.answer.count(l.lower()),
+                current_guess, ' '.join(self.underlined_phrase))
+            return message
+        else:
+            self.tries -= 1
+            self.guesses.add(current_guess)
+            message = 'You guessed wrong.. {} tries left\n {} '.format(
+                self.tries, ' '.join(self.underlined_phrase))
+            return message
 
-    def guess_view(self):
-        return [
-            l if l in self.guessed_letters or l == ' ' else None
-            for l in self.answer
-        ]
+    def gameover(self):
+        if self.tries == 0:
+            boolean = True
+            message = 'Game Over ... You lose'
+            return boolean, message
+        if self.underlined_phrase == self.answer:
+            boolean = True
+            message = 'Game Over... You Win'
+            return boolean, message
+        else:
+            boolean = False
+            message = None
+            return boolean, message
