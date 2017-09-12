@@ -12,7 +12,17 @@ def main():
 
 
 def wheel_main():
-    return 'In Progress... Please try again later'
+    players = []
+    decision = int(input('How many players are there?\n:'))
+    if decision <= 4:
+        num = 0
+        while num != decision:
+            name = input('what is your name?\n: ')
+            player = core.Player(name)
+            players.append(player)
+            num += 1
+    print(players)
+    game = core.WheelofForturne()
 
 
 def options():

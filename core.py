@@ -106,25 +106,43 @@ class Hangman:
             return boolean, message
 
 
-class WheelofForturne(Hangman):
-    def __init__(self, name, score, answer, wins):
-        super().__init__(answer)
-        self.score = 0
-        self.name = name
+class WheelofForturne:
+    def __init__(self, answer, current_player):
         self.answer = answer
-        self.guesses = set()
+        self.rounds = 0
+        self.current_player = current_player
 
     def spin(self):
         choices = [1500, 500, 'Lose a Turn', 'Bankrupt', 200, 250, 10000]
         choice = random.choice(choices)
         return choice
 
-    def guess(self, spin_choice, current_guess):
-        if spin_choice == 'Lose a Turn':
-            return None
-        elif spin_choice == 'Bankrupt':
-            self.score = 0
-        elif current_guess in self.guesses:
+    def solve_puzzle(self, phrase):
+        if phrase.upper() == ' '.join(self.answer).upper():
+            return True
+        return False
+
+    def turn(self, player):
+        decision = input('{}.. What would you like to do'.format(player.name))
+        if decision == 'Spin':
+            luck = WheelofForturne.spin()
+            if luck == 'Lose a Turn':
+                return None
+            elif luck == 'Bankrupt':
+                player.score = 0
+            else:
+                g = input('Guess: ')
+                return player.guess(g, luck)
+
+
+class Player:
+    def __init__(self, name):
+        self.guesses = set()
+        self.name = name
+        self.score = 0
+
+    def guess(self, current_guess, spin):
+        if current_guess in self.guesses:
             message = 'You already guessed that'
         elif (current_guess.lower() in self.answer) or (
                 current_guess.upper() in self.answer):
@@ -135,15 +153,20 @@ class WheelofForturne(Hangman):
             for index, l in change:
                 self.underlined_phrase.insert(index, l)
                 self.underlined_phrase.pop(index + 1)
+
+            self.score += (
+                self.answer.count(l.upper()) + self.answer.count(l.lower())
+            ) * spin
             message = 'There are {} {}(\'s)\n Money: {}\n {}'.format(
-                self.answer.count(l.upper()) + self.answer.count(l.lower()),
+                (self.answer.count(l.upper()) + self.answer.count(l.lower())),
                 current_guess, self.score, ' '.join(self.underlined_phrase))
             return message
         else:
             message = '{} is not in the phrase'.format(current_guess)
             return message
 
-    def solve_puzzle(self, phrase):
-        if phrase.upper() == ' '.join(self.answer).upper():
-            return True
-        return False
+    def __repr__(self):
+        return 'Player({}, ${})'.format(self.name, self.score)
+
+    def __str__(self):
+        return 'Name: {} || Money: {}'.format(self.name, self.score)
